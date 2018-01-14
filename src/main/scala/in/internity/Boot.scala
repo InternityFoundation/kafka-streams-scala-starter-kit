@@ -38,7 +38,6 @@ object Boot extends App with StreamExample {
 
   val streams: KafkaStreams = new KafkaStreams(builder.build(), config)
   streams.start()
-  streams
 
   Runtime.getRuntime.addShutdownHook(new Thread(() => {
     streams.close(10, TimeUnit.SECONDS)

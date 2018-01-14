@@ -65,21 +65,20 @@ class StreamExampleSpec extends WordSpec with Matchers with BeforeAndAfterEach w
 
     //FixMe: Fix this test
     "join two streams" in {
+
       val inputTopic1 = "wordjoin"
+
       val inputTopic2 = "personjoin"
+
       val inputString = "Hi this is Shivansh and my twitter handle is @shiv4nsh"
       val inputPerson = Person("Shivansh", 23, "shiv4nsh@gmail.com")
       val res = MockedStreams().topology { builder: StreamsBuilder =>
-        val streamSBuilder = new StreamSTest(builder)
         val stream1 = wordCount( new StreamSTest(builder), inputTopic1)
-        val stream2 = readAndWriteJson( new StreamSTest(builder), inputTopic2)
-        joinTwoStreams(stream1, stream2).to("joinedstreams")
+        joinTwoStreams(stream1, stream1).to("joinedstreams")
       }.config(kafkaConf)
-        .input[String, String](inputTopic1, Serdes.String(), Serdes.String(), Seq(("key", inputString)))
-        .input[String, String](inputTopic2, Serdes.String(), Serdes.String(), Seq(("key", write(inputPerson))))
+        .input[String, String](inputTopic1, Serdes.String(), Serdes.String(), Seq(("", inputString)))
         .output[String, String]("joinedstreams", Serdes.String(), Serdes.String(), 10)
       val result = res.toList
-      println("\n\n\n\n\n\n", result)
       res.toList.size shouldBe 10
     }
   }
